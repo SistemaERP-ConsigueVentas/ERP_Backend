@@ -1,8 +1,16 @@
 from django.urls import path, include
+from rest_framework.authtoken.views import obtain_auth_token
 
 from backendCV import views
 
 urlpatterns = [
-    #------ USER URLs ------#
-    path('user/list', views.UserList.as_view(), name='user-list'),
+    #------ LOGIN URL ------#
+    path('login', obtain_auth_token ,name='login'),
+    
+    #------ EMPLOYEE URLs ------#
+    path('employee/list', views.EmployeeList.as_view(), name='employee-list'),
+    
+    #------ COMPANY URL ------#
+    path('company/list', views.CompanyList.as_view(), name='company-list'),
+    
 ]
