@@ -5,7 +5,7 @@ from backendCV import views
 
 urlpatterns = [
     #------ LOGIN URL ------#
-    path('login', obtain_auth_token ,name='login'),
+    path('login', obtain_auth_token, name='login'),
     
     #------ EMPLOYEE URLs ------#
     path('employee/list', views.EmployeeList.as_view(), name='employee-list'),
