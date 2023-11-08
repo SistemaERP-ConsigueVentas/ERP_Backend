@@ -1,6 +1,5 @@
 from django.db import models
-
-# Create your models here.
+from django.db.models.signals import post_save
 
 #Modelo Company
 class Company(models.Model):
@@ -24,7 +23,3 @@ class Employee(models.Model):
     
     def __str__(self):
         return self.nombre
-    
-    
-
-    
