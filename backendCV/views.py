@@ -1,10 +1,8 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from backendCV.models import Employee, Company
+from backendCV.models import Employee, Company, User
 from backendCV.serializers import EmployeeListSerializer, CompanyListSerializer
 from rest_framework.permissions import IsAuthenticated
-
-# Create your views here.
 
 class EmployeeList(generics.ListAPIView):
     queryset = Employee.objects.all()

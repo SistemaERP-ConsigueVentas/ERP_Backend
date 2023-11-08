@@ -23,3 +23,14 @@ class Employee(models.Model):
     
     def __str__(self):
         return self.nombre
+    
+class User(models.Model):
+    id = models.AutoField(primary_key=True)
+    nombre = models.CharField(max_length=20)
+    apellidos = models.CharField(max_length=50)
+    email = models.CharField(max_length=50)
+    username = models.CharField(max_length=50, default='hola')
+    password = models.CharField(max_length=100)
+    
+    def __str__(self):
+        return self.nombre
