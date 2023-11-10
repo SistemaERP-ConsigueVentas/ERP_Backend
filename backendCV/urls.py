@@ -1,9 +1,8 @@
 from django.urls import path, include
-from rest_framework.authtoken.views import obtain_auth_token
 from backendCV import views
 
 urlpatterns = [
-    #------ LOGIN URL ------#
+    #------ LOGIN AND REGISTER URLs ------#
     path('login', views.UserLoginView.as_view(), name='login'),
     path('register', views.UserRegistrationView.as_view(), name='register'),
     

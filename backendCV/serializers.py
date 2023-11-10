@@ -8,7 +8,7 @@ class CompanyListSerializer(serializers.ModelSerializer):
         fields = '__all__' # Incluye todos los campos del modelo Company
 
 
-# Serializer EmployeeListSerializer para el modelo Employee
+# Serializer UserListSerializer para el modelo User
 class EmployeeListSerializer(serializers.ModelSerializer):
     
     company_name = serializers.CharField(source='company_id.name', read_only=True)
@@ -33,5 +33,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 # Serializer para el modelo User (para login)
 class UserLoginSerializer(serializers.Serializer):
+    # Especifica los campos requeridos para la autenticación
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
