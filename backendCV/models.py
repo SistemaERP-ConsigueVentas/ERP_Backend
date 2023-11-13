@@ -40,7 +40,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.nombre
 
-
 #Modelo Company
 class Company(models.Model):
     id = models.AutoField(primary_key=True)
