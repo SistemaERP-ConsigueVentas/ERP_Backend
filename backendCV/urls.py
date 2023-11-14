@@ -5,6 +5,7 @@ urlpatterns = [
     #------ LOGIN AND REGISTER URLs ------#
     path('login', views.UserLoginView.as_view(), name='login'),
     path('register', views.UserRegistrationView.as_view(), name='register'),
+    path('change-password', views.ChangePasswordView.as_view(), name='change-password'),
     
     #------ EMPLOYEE URLs ------#
     path('employee/list', views.EmployeeList.as_view(), name='employee-list'),

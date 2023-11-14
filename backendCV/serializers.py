@@ -36,3 +36,8 @@ class UserLoginSerializer(serializers.Serializer):
     # Especifica los campos requeridos para la autenticación
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
+    
+# Serializer para cambio de contraseña
+class ChangePasswordSerializer(serializers.Serializer):
+    old_password = serializers.CharField(write_only=True)
+    new_password = serializers.CharField(write_only=True)
