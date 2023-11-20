@@ -19,10 +19,4 @@ urlpatterns = [
     
     #------ POSITION URLs ------#
     path('position/list', views.PositionList.as_view(), name='position-list'),
-    
-    # #------ EMPLOYEE URLs ------#
-    # path('profile/list', views.ProfileList.as_view(), name='profile-list'),
-    
-    # #------ EMPLOYEE URLs ------#
-    # path('role/list', views.RoleList.as_view(), name='role-list'),
 ]
