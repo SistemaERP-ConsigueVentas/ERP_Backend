@@ -12,5 +12,23 @@ urlpatterns = [
     
     #------ COMPANY URL ------#
     path('company/list', views.CompanyList.as_view(), name='company-list'),
-        
+    
+    #------ USER URLs ------#
+    path('user/list', views.UserList.as_view(), name='user-list'),
+    # path('user/<int:id>', views.UserForId.as_view(), name='user-detail'),
+    
+    #------ DEPARTMENT URLs ------#
+    path('department/list', views.DepartmentList.as_view(), name='department-list'),
+    
+    #------ CORE URLs ------#
+    path('core/list', views.CoreList.as_view(), name='core-list'),
+    
+    #------ POSITION URLs ------#
+    path('position/list', views.PositionList.as_view(), name='position-list'),
+    
+    # #------ EMPLOYEE URLs ------#
+    # path('profile/list', views.ProfileList.as_view(), name='profile-list'),
+    
+    # #------ EMPLOYEE URLs ------#
+    # path('role/list', views.RoleList.as_view(), name='role-list'),
 ]

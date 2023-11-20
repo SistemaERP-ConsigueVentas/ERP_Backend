@@ -1,16 +1,24 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from backendCV.models import Employee, Company, User
-from backendCV.serializers import EmployeeListSerializer, CompanyListSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer
+from backendCV.models import Employee, Company, User, Department, Core, Position
+from backendCV.serializers import EmployeeListSerializer, CompanyListSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer, UserListSerializer, CoreListSerializer, PositionListSerializer, DepartmentListSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+from django.shortcuts import get_object_or_404
 
 # Vista para el registro de usuarios
 class UserRegistrationView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
+
+    def perform_create(self, serializer):
+        # Si es un superusuario, establecer el campo role en None
+        if self.request.user.is_superuser:
+            serializer.save(role=None)
+        else:
+            serializer.save()
 
 # Vista para el login
 class UserLoginView(generics.CreateAPIView):
@@ -81,5 +89,41 @@ class CompanyList(generics.ListAPIView):
     queryset = Company.objects.all()
     serializer_class = CompanyListSerializer
     permission_classes = [IsAuthenticated]
+    
+class UserList(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserListSerializer
+    permission_classes = [IsAuthenticated]
+    
+class CoreList(generics.ListAPIView):
+    queryset = Core.objects.all()
+    serializer_class = CoreListSerializer
+    permission_classes = [IsAuthenticated]
+    
+class DepartmentList(generics.ListAPIView):
+    queryset = Department.objects.all()
+    serializer_class = DepartmentListSerializer
+    permission_classes = [IsAuthenticated]
+    
+# class ProfileList(generics.ListAPIView):
+#     queryset = Profile.objects.all()
+#     serializer_class = ProfileListSerializer
+#     permission_classes = [IsAuthenticated]
+    
+# class RoleList(generics.ListAPIView):
+#     queryset = Role.objects.all()
+#     serializer_class = RoleListSerializer
+#     permission_classes = [IsAuthenticated]
+
+class PositionList(generics.ListAPIView):
+    queryset = Position.objects.all()
+    serializer_class = PositionListSerializer
+    permission_classes = [IsAuthenticated]
+    
+# class UserForId(generics.RetrieveAPIView):
+#     serializer_class = UserListSerializer
+#     queryset = User.objects.all()
+#     permission_classes = [IsAuthenticated]
+#     lookup_field = 'id'
 
     
