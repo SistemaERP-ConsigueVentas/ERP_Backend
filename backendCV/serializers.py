@@ -66,8 +66,7 @@ class ChangePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(write_only=True)
     new_password = serializers.CharField(write_only=True)
     
-    
-    
+
 class UserListSerializer(serializers.ModelSerializer):
     position_name = serializers.CharField(source='position_id.name', read_only=True)
     

@@ -7,15 +7,9 @@ urlpatterns = [
     path('register', views.UserRegistrationView.as_view(), name='register'),
     path('change-password', views.ChangePasswordView.as_view(), name='change-password'),
     
-    #------ EMPLOYEE URLs ------#
-    path('employee/list', views.EmployeeList.as_view(), name='employee-list'),
-    
-    #------ COMPANY URL ------#
-    path('company/list', views.CompanyList.as_view(), name='company-list'),
-    
     #------ USER URLs ------#
     path('user/list', views.UserList.as_view(), name='user-list'),
-    # path('user/<int:id>', views.UserForId.as_view(), name='user-detail'),
+    path('user/<int:id>', views.UserForId.as_view(), name='user-detail'),
     
     #------ DEPARTMENT URLs ------#
     path('department/list', views.DepartmentList.as_view(), name='department-list'),

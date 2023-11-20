@@ -79,17 +79,6 @@ class ChangePasswordView(generics.UpdateAPIView):
 
         return Response({'message': 'Contraseña cambiada exitosamente.'}, status=status.HTTP_200_OK)
     
-class EmployeeList(generics.ListAPIView):
-    queryset = Employee.objects.all()
-    serializer_class = EmployeeListSerializer
-    permission_classes = [IsAuthenticated]
-    
-
-class CompanyList(generics.ListAPIView):
-    queryset = Company.objects.all()
-    serializer_class = CompanyListSerializer
-    permission_classes = [IsAuthenticated]
-    
 class UserList(generics.ListAPIView):
     queryset = User.objects.all()
     serializer_class = UserListSerializer
@@ -120,10 +109,10 @@ class PositionList(generics.ListAPIView):
     serializer_class = PositionListSerializer
     permission_classes = [IsAuthenticated]
     
-# class UserForId(generics.RetrieveAPIView):
-#     serializer_class = UserListSerializer
-#     queryset = User.objects.all()
-#     permission_classes = [IsAuthenticated]
-#     lookup_field = 'id'
+class UserForId(generics.RetrieveAPIView):
+    serializer_class = UserListSerializer
+    queryset = User.objects.all()
+    permission_classes = [IsAuthenticated]
+    lookup_field = 'id'
 
     
