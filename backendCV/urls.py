@@ -25,7 +25,7 @@ urlpatterns = [
     path('invoices/create', views.InvoiceCreateView.as_view(), name='invoice-create'),
     path('invoices/update/<int:pk>', views.InvoiceUpdateView.as_view(), name='invoice-update'),
     path('invoices/delete/<int:pk>', views.InvoiceDeleteView.as_view(), name='invoice-delete'),
-    path('invoices/search_by_client/<int:client_id>', views.InvoiceSearchByClientView.as_view(), name='invoice-search-by-client'),
+    path('invoices/<int:client_id>/client', views.InvoiceSearchByClientView.as_view(), name='invoice-search-by-client'),
 
      # ------ CLIENT URLs ------#
     path('clients', views.ClientListView.as_view(), name='client-list'),
