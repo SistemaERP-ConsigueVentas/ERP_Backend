@@ -1,5 +1,16 @@
 from rest_framework import serializers
-from backendCV.models import User, Department, Core, Position
+from backendCV.models import Client, Invoice, User, Department, Core, Position
+
+# Serializer para el modelo Client
+class ClientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Client
+        fields = '__all__'
+# Serializer para el modelo Invoice
+class InvoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Invoice
+        fields = '__all__'
 
 # Serializer para el modelo Department
 class DepartmentListSerializer(serializers.ModelSerializer):

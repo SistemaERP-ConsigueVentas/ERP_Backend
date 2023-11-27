@@ -28,7 +28,7 @@ class Invoice(models.Model):
     date_of_issue = models.DateField()
 
     def __str__(self):
-        return self.number
+        return str(self.number)
 
 #Modelo Sales
 class Sale(models.Model):
