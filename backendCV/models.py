@@ -24,7 +24,7 @@ class Invoice(models.Model):
     description = models.TextField()
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     money = models.CharField(max_length=3)
-    status = models.CharField(max_length=20)
+    status = models.BooleanField(default=False)
     date_of_issue = models.DateField()
 
     def __str__(self):
