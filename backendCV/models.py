@@ -12,30 +12,37 @@ class Client(models.Model):
     
     def __str__(self):
         return self.name
-    
-#Modelo Expense type
-class Expense_type(models.Model):
-    id_expense_type = models.AutoField(primary_key=True)
-    status = models.BooleanField(default=False)
-    
+
+#Modelo Invoices
+class Invoice(models.Model):
+    id = models.AutoField(primary_key=True)
+    serie = models.CharField(max_length=10)
+    number = models.PositiveIntegerField()
+    ruc = models.CharField(max_length=13)
+    business_name = models.CharField(max_length=255)
+    address = models.TextField()
+    description = models.TextField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    money = models.CharField(max_length=3)
+    status = models.CharField(max_length=20)
+    date_of_issue = models.DateField()
+
     def __str__(self):
-        return self.status
-    
-#Modelo Expenses
-class Expense(models.Model):
-    id_expense = models.AutoField(primary_key=True)
-    date = models.DateTimeField
-    description = models.TextField
-    amount = models.DecimalField(decimal_places=2)
-    cell = models.CharField(max_length=9)
+        return self.number
+
+#Modelo Sales
+class Sale(models.Model):
+    id_sale = models.AutoField(primary_key=True)
+    date = models.DateField()
+    product = models.CharField(max_length=255)
     
     # Clave foránea que establece una relación con el modelo Clients
     client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
-    # Clave foránea que establece una relación con el modelo Expense Type
-    expense_type_id = models.ForeignKey(Client, on_delete=models.CASCADE)
-    
+    # Clave foránea que establece una relación con el modelo Invoices
+    invoice_id = models.ForeignKey(Invoice, on_delete=models.CASCADE)
+
     def __str__(self):
-        return self.description
+        return self.product
 
 #Modelo Department
 class Department(models.Model):
