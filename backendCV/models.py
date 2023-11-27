@@ -2,6 +2,41 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+#Modelo Clients
+class Client(models.Model):
+    id_client = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=40)
+    surname = models.CharField(max_length=40)
+    email = models.EmailField(unique=True)
+    cell = models.CharField(max_length=9)
+    
+    def __str__(self):
+        return self.name
+    
+#Modelo Expense type
+class Expense_type(models.Model):
+    id_expense_type = models.AutoField(primary_key=True)
+    status = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return self.status
+    
+#Modelo Expenses
+class Expense(models.Model):
+    id_expense = models.AutoField(primary_key=True)
+    date = models.DateTimeField
+    description = models.TextField
+    amount = models.DecimalField(decimal_places=2)
+    cell = models.CharField(max_length=9)
+    
+    # Clave foránea que establece una relación con el modelo Clients
+    client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
+    # Clave foránea que establece una relación con el modelo Expense Type
+    expense_type_id = models.ForeignKey(Client, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.description
+
 #Modelo Department
 class Department(models.Model):
     id_department = models.AutoField(primary_key=True)
