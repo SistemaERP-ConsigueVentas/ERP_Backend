@@ -21,10 +21,10 @@ urlpatterns = [
     path('position', views.PositionList.as_view(), name='position-list'),
 
     # ------ INVOICE URLs ------#
-    path('invoices', views.InvoiceListView.as_view(), name='invoice-list'),
-    path('invoices/create', views.InvoiceCreateView.as_view(), name='invoice-create'),
-    path('invoices/update/<int:pk>', views.InvoiceUpdateView.as_view(), name='invoice-update'),
-    path('invoices/delete/<int:pk>', views.InvoiceDeleteView.as_view(), name='invoice-delete'),
+    path('invoices', views.InvoiceListCreateView.as_view(), name='invoice-list'),
+    path('invoices/create', views.InvoiceListCreateView.as_view(), name='invoice-create'),
+    path('invoices/update/<int:pk>', views.InvoiceUpdateDestroyView.as_view(), name='invoice-update'),
+    path('invoices/delete/<int:pk>', views.InvoiceUpdateDestroyView.as_view(), name='invoice-delete'),
     path('invoices/<int:client_id>/client', views.InvoiceSearchByClientView.as_view(), name='invoice-search-by-client'),
 
      # ------ CLIENT URLs ------#

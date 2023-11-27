@@ -6,52 +6,26 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from django.shortcuts import get_object_or_404
 
 class ClientListView(generics.ListCreateAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
     permission_classes = [IsAuthenticated]
 
-class ClientCreateView(generics.CreateAPIView):
+class ClientUpdateView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
     permission_classes = [IsAuthenticated]
 
-class ClientUpdateView(generics.RetrieveUpdateAPIView):
-    queryset = Client.objects.all()
-    serializer_class = ClientSerializer
-    permission_classes = [IsAuthenticated]
-
-class ClientDeleteView(generics.DestroyAPIView):
-    queryset = Client.objects.all()
-    serializer_class = ClientSerializer
-    permission_classes = [IsAuthenticated]
-
-class InvoiceListView(generics.ListAPIView):
+class InvoiceListCreateView(generics.ListCreateAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
     permission_classes = [IsAuthenticated]
 
-class InvoiceCreateView(generics.CreateAPIView):
+class InvoiceUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
     permission_classes = [IsAuthenticated]
-
-class InvoiceUpdateView(generics.UpdateAPIView):
-    queryset = Invoice.objects.all()
-    serializer_class = InvoiceSerializer
-    permission_classes = [IsAuthenticated]
-
-class InvoiceDeleteView(generics.DestroyAPIView):
-    queryset = Invoice.objects.all()
-    serializer_class = InvoiceSerializer
-    permission_classes = [IsAuthenticated]
-
-from rest_framework import generics
-from backendCV.models import Invoice
-from backendCV.serializers import InvoiceSerializer
-from rest_framework.permissions import IsAuthenticated
 
 class InvoiceSearchByClientView(generics.ListAPIView):
     serializer_class = InvoiceSerializer
