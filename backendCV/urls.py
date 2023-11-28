@@ -28,8 +28,8 @@ urlpatterns = [
     path('invoices/<int:client_id>/client', views.InvoiceSearchByClientView.as_view(), name='invoice-search-by-client'),
 
      # ------ CLIENT URLs ------#
-    path('clients', views.ClientListView.as_view(), name='client-list'),
-    path('clients/create', views.ClientCreateView.as_view(), name='client-create'),
-    path('clients/update/<int:pk>', views.ClientUpdateView.as_view(), name='client-update'),
-    path('clients/delete/<int:pk>', views.ClientDeleteView.as_view(), name='client-delete'),
+    path('clients', views.ClientListCreateView.as_view(), name='client-list'),
+    path('clients/create', views.ClientListCreateView.as_view(), name='client-create'),
+    path('clients/update/<int:pk>', views.ClientUpdateDestroyView.as_view(), name='client-update'),
+    path('clients/delete/<int:pk>', views.ClientUpdateDestroyView.as_view(), name='client-delete'),
 ]

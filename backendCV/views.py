@@ -7,16 +7,18 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
-class ClientListView(generics.ListCreateAPIView):
+# Cliente
+class ClientListCreateView(generics.ListCreateAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
     permission_classes = [IsAuthenticated]
 
-class ClientUpdateView(generics.RetrieveUpdateDestroyAPIView):
+class ClientUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
     permission_classes = [IsAuthenticated]
 
+# Factura
 class InvoiceListCreateView(generics.ListCreateAPIView):
     queryset = Invoice.objects.all()
     serializer_class = InvoiceSerializer
