@@ -3,7 +3,7 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 #Modelo Expenses_Status
-class Expense_Status(models.Model):
+class ExpenseStatus(models.Model):
     id_status = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     
@@ -18,7 +18,7 @@ class Expense(models.Model):
     date = models.DateField()
     made_by = models.CharField(max_length=40)
     # Clave foránea que establece una relación con el modelo Expense_Status
-    status_id = models.ForeignKey(Expense_Status, on_delete=models.CASCADE)
+    status_id = models.ForeignKey(ExpenseStatus, on_delete=models.CASCADE)
     
     def __str__(self):
             return self.name

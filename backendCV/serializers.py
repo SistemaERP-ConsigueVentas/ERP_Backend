@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from backendCV.models import Expense_Status, Expense, Client, Invoice, User, Department, Core, Position 
+from backendCV.models import ExpenseStatus, Expense, Client, Invoice, User, Department, Core, Position 
 
 # Serializer para el modelo Expenses_Status
-class Expense_StatusSerializer(serializers.ModelSerializer):
+class ExpenseStatusSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Expense_Status
+        model = ExpenseStatus
         fields = '__all__'
         
 # Serializer para el modelo Expenses

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from backendCV.models import Expense_Status, Expense, Client, Invoice, User, Department, Core, Position
-from backendCV.serializers import Expense_StatusSerializer, ExpenseSerializer, ClientSerializer, InvoiceSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer, UserListSerializer, CoreListSerializer, PositionListSerializer, DepartmentListSerializer
+from backendCV.models import ExpenseStatus, Expense, Client, Invoice, User, Department, Core, Position
+from backendCV.serializers import ExpenseStatusSerializer, ExpenseSerializer, ClientSerializer, InvoiceSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer, UserListSerializer, CoreListSerializer, PositionListSerializer, DepartmentListSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
