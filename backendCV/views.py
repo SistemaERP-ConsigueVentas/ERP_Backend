@@ -1,11 +1,47 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from backendCV.models import Client, Invoice, User, Department, Core, Position
-from backendCV.serializers import ClientSerializer, InvoiceSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer, UserListSerializer, CoreListSerializer, PositionListSerializer, DepartmentListSerializer
+from backendCV.models import Expense_Status, Expense, Client, Invoice, User, Department, Core, Position
+from backendCV.serializers import Expense_StatusSerializer, ExpenseSerializer, ClientSerializer, InvoiceSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer, UserListSerializer, CoreListSerializer, PositionListSerializer, DepartmentListSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
+
+#Expense
+class ExpenseListCreateView(generics.ListCreateAPIView):
+    serializer_class = ExpenseSerializer
+
+    def get_queryset(self):
+        return Expense.objects.select_related('status_id')
+
+    def list(self, request):
+        expenses = self.get_queryset()
+
+        # Filtrar gastos por estado y organizar en 4 listas
+        status_lists = {
+            'Aprobado': [],
+            'Rechazado': [],
+            'Por aprobar': [],
+            'Por enviar': [],
+        }
+
+        for expense in expenses:
+            status_label = expense.status_id.name
+            status_lists[status_label].append(ExpenseSerializer(expense).data)
+
+        return Response(status_lists)
+
+    def create(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class ExpenseDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Expense.objects.all()
+    serializer_class = ExpenseSerializer
+    permission_classes = [IsAuthenticated]
 
 # Cliente
 class ClientListCreateView(generics.ListCreateAPIView):

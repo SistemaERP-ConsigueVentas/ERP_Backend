@@ -32,4 +32,11 @@ urlpatterns = [
     path('clients/create', views.ClientListCreateView.as_view(), name='client-create'),
     path('clients/update/<int:pk>', views.ClientUpdateDestroyView.as_view(), name='client-update'),
     path('clients/delete/<int:pk>', views.ClientUpdateDestroyView.as_view(), name='client-delete'),
+
+    # ------ EXPENSE URLs ------#
+    path('expenses', views.ExpenseListCreateView.as_view(), name='expense-list'),
+    path('expenses/create', views.ExpenseListCreateView.as_view(), name='expense-create'),
+    path('expenses/update/<int:pk>', views.ExpenseDetailUpdateDestroyView.as_view(), name='expense-update'),
+    path('expenses/delete/<int:pk>', views.ExpenseDetailUpdateDestroyView.as_view(), name='expense-delete'),
+
 ]
