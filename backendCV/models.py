@@ -15,6 +15,7 @@ class Expense(models.Model):
     id_expense = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateField()
     made_by = models.CharField(max_length=40)
     # Clave foránea que establece una relación con el modelo Expense_Status
     status_id = models.ForeignKey(Expense_Status, on_delete=models.CASCADE)
