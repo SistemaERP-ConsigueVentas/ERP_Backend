@@ -4,8 +4,9 @@ from backendCV.models import ExpenseStatus, Expense, Client, Invoice, User, Depa
 from backendCV.serializers import ExpenseStatusSerializer, ExpenseSerializer, ClientSerializer, InvoiceSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer, UserListSerializer, CoreListSerializer, PositionListSerializer, DepartmentListSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import authenticate
+from rest_framework_simplejwt.views import TokenRefreshView
 
 #Expense
 class ExpenseListCreateView(generics.ListCreateAPIView):
@@ -43,6 +44,51 @@ class ExpenseDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ExpenseSerializer
     permission_classes = [IsAuthenticated]
 
+    def patch(self, request, **kwargs):
+        expense = self.get_object()
+
+        # verificar si existe "new_status_id" en la Url
+        new_status_id = kwargs.get('new_status_id', None)
+
+        if new_status_id:
+            # Llamar al método para cambiar el estado
+            return self.status_change(expense, new_status_id)
+
+        serializer = self.get_serializer(expense, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
+
+    def status_change(self, expense, new_status_id):
+        # Estados en BD IDs:
+        # Aprobado = 1,
+        # Rechazado = 2,
+        # Por aprobar = 3,
+        # Por enviar = 4,
+        current_status_id = expense.status_id_id
+
+        # Validaciones
+        if current_status_id == 4 and new_status_id == 3:
+            # Cambiar de 'Por enviar' a 'Por aprobar' es válido
+            pass
+        elif current_status_id == 3 and new_status_id in [1, 2]:
+            # Cambiar de 'Por aprobar' a 'Aceptado' o 'Rechazado' es válido
+            pass
+        else:
+            return Response({'error': 'Cambio de estado no permitido'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            new_status = ExpenseStatus.objects.get(pk=new_status_id)
+        except ExpenseStatus.DoesNotExist:
+            return Response({'error': f'El estado con ID "{new_status_id}" no existe'}, status=status.HTTP_404_NOT_FOUND)
+
+        expense.status_id = new_status
+        expense.save()
+
+        serializer = self.get_serializer(expense)
+        return Response(serializer.data)
+    
 # Cliente
 class ClientListCreateView(generics.ListCreateAPIView):
     queryset = Client.objects.all()
@@ -118,6 +164,22 @@ class UserLoginView(generics.CreateAPIView):
             }, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Credenciales inválidas'}, status=status.HTTP_401_UNAUTHORIZED)
+
+#Vista para el Refresh Token
+class RefreshTokenView(TokenRefreshView):
+    def post(self, request):
+        refresh_token = request.headers.get('Authorization', '').split(' ')[-1]
+
+        serializer = self.get_serializer(data={'refresh': refresh_token})
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            return Response({'error': 'Token de actualización no válido'}, status=401)
+
+        return Response({
+            'access': str(serializer.validated_data['access']),
+        }) 
         
 # Vista para el cambio de contraseña
 class ChangePasswordView(generics.UpdateAPIView):
