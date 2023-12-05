@@ -1,5 +1,53 @@
 from rest_framework import serializers
-from backendCV.models import ExpenseStatus, Expense, Client, Invoice, User, Department, Core, Position 
+from backendCV.models import Characteristics, Company, Proforma, DetailsService, Project, Observations, ExpenseStatus, PaymentConditions, Price, Expense, Client, Invoice, User, Department, Core, Position 
+
+# Serializer para el modelo Characteristics
+class CharacteristicsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Characteristics
+        fields = '__all__'
+
+# Serializer para el modelo Company
+class CompanySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Company
+        fields = '__all__'
+
+# Serializer para el modelo Proforma
+class ProformaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Proforma
+        fields = '__all__'
+
+# Serializer para el modelo DetailsService
+class DetailsServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DetailsService
+        fields = '__all__'
+
+# Serializer para el modelo Project
+class ProjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Project
+        fields = '__all__'
+
+# Serializer para el modelo Observations
+class ObservationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Observations
+        fields = '__all__'
+
+# Serializer para el modelo Price
+class PriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Price
+        fields = '__all__'
+
+# Serializer para el modelo PaymentConditions
+class PaymentConditionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentConditions
+        fields = '__all__'
 
 # Serializer para el modelo Expenses_Status
 class ExpenseStatusSerializer(serializers.ModelSerializer):

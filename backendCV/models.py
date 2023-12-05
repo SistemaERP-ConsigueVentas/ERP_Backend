@@ -2,6 +2,116 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+#Modelo Proforma
+class Proforma(models.Model):
+    proforma_id = models.AutoField(primary_key=True)
+    invoice_number = models.CharField(max_length=20)
+    date = models.DateField()
+    reference = models.CharField(max_length=255)
+    prepared_by = models.CharField(max_length=255)
+    approved_by = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    celphone_number = models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.invoice_number
+
+#Modelo PaymentConditions 
+class PaymentConditions(models.Model):
+    condition_id = models.AutoField(primary_key=True)
+    description = models.TextField()
+    deposits = models.CharField(max_length=255)
+    payable_to = models.CharField(max_length=255)
+    account = models.CharField(max_length=255)
+    cci = models.CharField(max_length=255)
+    
+    # Clave foránea que establece una relación con el modelo Proforma
+    proforma_id = models.ForeignKey(Proforma, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.condition_id)
+
+#Modelo Price 
+class Price(models.Model):
+    price_id = models.AutoField(primary_key=True)
+    investment = models.TextField()
+    package = models.TextField()
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    note = models.TextField()
+
+    # Clave foránea que establece una relación con el modelo Proforma
+    proforma_id = models.ForeignKey(Proforma, on_delete=models.CASCADE)
+
+    def __str__(self):    
+        return str(self.price_id)
+    
+#Modelo Project 
+class Project(models.Model):
+    project_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    personnel = models.CharField(max_length=255)
+    work_time = models.CharField(max_length=255)
+
+    # Clave foránea que establece una relación con el modelo Proforma
+    proforma_id = models.ForeignKey(Proforma, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+#Modelo class Observations
+class Observations(models.Model):
+    observation_id = models.AutoField(primary_key=True)
+    description = models.TextField()
+    
+    # Clave foránea que establece una relación con el modelo Project
+    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return str(self.observation_id)
+    
+    
+#Modelo Details_Service 
+class DetailsService(models.Model):
+    details_service_id = models.AutoField(primary_key=True)
+    name  = models.CharField(max_length=50)
+    item  = models.IntegerField()
+    detail  = models.CharField(max_length=255)
+    description  = models.TextField()
+    
+    def __str__(self):
+        return self.name
+        
+    
+#Modelo Characteristics
+class Characteristics (models.Model):
+    characteristics_id = models.AutoField(primary_key=True)
+    package_1 = models.CharField(max_length=255)
+    package_2 = models.CharField(max_length=255)
+    package_3 = models.CharField(max_length=255)
+
+    # Clave foránea que establece una relación con el modelo Proforma
+    proforma_id = models.ForeignKey(Proforma, on_delete=models.CASCADE)
+    
+    # Clave foránea que establece una relación con el modelo DetailsService
+    details_service_id = models.ForeignKey(DetailsService, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return str(self.characteristics_id)
+
+#Modelo Company
+class Company(models.Model):
+    company_id = models.AutoField(primary_key=True)
+    business_name = models.CharField(max_length=255)
+    tax_id = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=20)
+    email = models.EmailField(max_length=255)
+    website = models.CharField(max_length=50)
+    office_address = models.CharField(max_length=255)
+    portfolio = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.business_name
+
 #Modelo Expenses_Status
 class ExpenseStatus(models.Model):
     id_status = models.AutoField(primary_key=True)
