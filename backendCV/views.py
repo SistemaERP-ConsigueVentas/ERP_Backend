@@ -1,12 +1,68 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from backendCV.models import ExpenseStatus, Expense, Client, Invoice, User, Department, Core, Position
-from backendCV.serializers import ExpenseStatusSerializer, ExpenseSerializer, ClientSerializer, InvoiceSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer, UserListSerializer, CoreListSerializer, PositionListSerializer, DepartmentListSerializer
+from backendCV.models import Company, Proforma, Project, Observations, Price, ExpenseStatus, Expense, Client, Invoice, User, Department, Core, Position
+from backendCV.serializers import CompanySerializer, ProformaSerializer, ProjectSerializer, ObservationsSerializer, PriceSerializer, ExpenseStatusSerializer, ExpenseSerializer, ClientSerializer, InvoiceSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer, UserListSerializer, CoreListSerializer, PositionListSerializer, DepartmentListSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.views import TokenRefreshView
+
+#Company
+class CompanyListCreateView(generics.ListCreateAPIView):
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer
+    permission_classes = [IsAuthenticated]
+    
+class CompanyDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Company.objects.all()
+    serializer_class = CompanySerializer
+    permission_classes = [IsAuthenticated]
+
+
+#Proforma
+class ProformaListCreateView(generics.ListCreateAPIView):
+    queryset = Proforma.objects.all()
+    serializer_class = ProformaSerializer
+    permission_classes = [IsAuthenticated]
+    
+class ProformaDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Proforma.objects.all()
+    serializer_class = ProformaSerializer
+    permission_classes = [IsAuthenticated]
+
+#Project
+class ProjectListCreateView(generics.ListCreateAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
+    
+class ProjectDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Project.objects.all()
+    serializer_class = ProjectSerializer
+    permission_classes = [IsAuthenticated]
+
+#Observations
+class ObservationsListCreateView(generics.ListCreateAPIView):
+    queryset = Observations.objects.all()
+    serializer_class = ObservationsSerializer
+    permission_classes = [IsAuthenticated]
+    
+class ObservationsDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Observations.objects.all()
+    serializer_class = ObservationsSerializer
+    permission_classes = [IsAuthenticated]
+
+#Price
+class PriceListCreateView(generics.ListCreateAPIView):
+    queryset = Price.objects.all()
+    serializer_class = PriceSerializer
+    permission_classes = [IsAuthenticated]
+    
+class PriceDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Price.objects.all()
+    serializer_class = PriceSerializer
+    permission_classes = [IsAuthenticated]
 
 #Expense
 class ExpenseListCreateView(generics.ListCreateAPIView):

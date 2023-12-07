@@ -2,6 +2,21 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
+
+#Modelo Company
+class Company(models.Model):
+    company_id = models.AutoField(primary_key=True)
+    business_name = models.CharField(max_length=255)
+    tax_id = models.CharField(max_length=15)
+    phone_number = models.CharField(max_length=20)
+    email = models.EmailField(max_length=255)
+    website = models.CharField(max_length=50)
+    office_address = models.CharField(max_length=255)
+    portfolio = models.CharField(max_length=50)
+    
+    def __str__(self):
+        return self.business_name
+    
 #Modelo Proforma
 class Proforma(models.Model):
     proforma_id = models.AutoField(primary_key=True)
@@ -12,6 +27,9 @@ class Proforma(models.Model):
     approved_by = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
     celphone_number = models.CharField(max_length=20)
+    
+     # Clave foránea que establece una relación con el modelo Company 
+    company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.invoice_number
@@ -97,20 +115,6 @@ class Characteristics (models.Model):
     
     def __str__(self):
         return str(self.characteristics_id)
-
-#Modelo Company
-class Company(models.Model):
-    company_id = models.AutoField(primary_key=True)
-    business_name = models.CharField(max_length=255)
-    tax_id = models.CharField(max_length=15)
-    phone_number = models.CharField(max_length=20)
-    email = models.EmailField(max_length=255)
-    website = models.CharField(max_length=50)
-    office_address = models.CharField(max_length=255)
-    portfolio = models.CharField(max_length=50)
-    
-    def __str__(self):
-        return self.business_name
 
 #Modelo Expenses_Status
 class ExpenseStatus(models.Model):

@@ -20,6 +20,41 @@ urlpatterns = [
     
     #------ POSITION URLs ------#
     path('position', views.PositionList.as_view(), name='position-list'),
+    
+    # ------ Company URLs ------#
+    path('companies', views.CompanyListCreateView.as_view(), name='company-list'),
+    path('companies/create', views.CompanyListCreateView.as_view(), name='company-create'),
+    path('companies/<int:pk>', views.CompanyDetailUpdateDestroyView.as_view(), name='company-detail'),
+    path('companies/update/<int:pk>', views.CompanyDetailUpdateDestroyView.as_view(), name='company-update'),
+    path('companies/delete/<int:pk>', views.CompanyDetailUpdateDestroyView.as_view(), name='company-delete'),
+    
+    # ------ PROFORMA URLs ------#
+    path('proformas', views.ProformaListCreateView.as_view(), name='proforma-list'),
+    path('proformas/create', views.ProformaListCreateView.as_view(), name='proforma-create'),
+    path('proformas/<int:pk>', views.ProformaDetailUpdateDestroyView.as_view(), name='proforma-detail'),
+    path('proformas/update/<int:pk>', views.ProformaDetailUpdateDestroyView.as_view(), name='proforma-update'),
+    path('proformas/delete/<int:pk>', views.ProformaDetailUpdateDestroyView.as_view(), name='proforma-delete'),
+    
+    # ------ PROJECT URLs ------#
+    path('projects', views.ProjectListCreateView.as_view(), name='project-list'),
+    path('projects/create', views.ProjectListCreateView.as_view(), name='project-create'),
+    path('projects/<int:pk>', views.ProjectDetailUpdateDestroyView.as_view(), name='project-detail'),
+    path('projects/update/<int:pk>', views.ProjectDetailUpdateDestroyView.as_view(), name='project-update'),
+    path('projects/delete/<int:pk>', views.ProjectDetailUpdateDestroyView.as_view(), name='project-delete'),
+
+    # ------ OBSERVATIONS URLs ------#
+    path('observations', views.ObservationsListCreateView.as_view(), name='observations-list'),
+    path('observations/create', views.ObservationsListCreateView.as_view(), name='observations-create'),
+    path('observations/<int:pk>', views.ObservationsDetailUpdateDestroyView.as_view(), name='observations-detail'),
+    path('observations/update/<int:pk>', views.ObservationsDetailUpdateDestroyView.as_view(), name='observations-update'),
+    path('observations/delete/<int:pk>', views.ObservationsDetailUpdateDestroyView.as_view(), name='observations-delete'),
+
+    # ------ PRICE URLs ------#
+    path('prices', views.PriceListCreateView.as_view(), name='price-list'),
+    path('prices/create', views.PriceListCreateView.as_view(), name='price-create'),
+    path('prices/<int:pk>', views.PriceDetailUpdateDestroyView.as_view(), name='price-detail'),
+    path('prices/update/<int:pk>', views.PriceDetailUpdateDestroyView.as_view(), name='price-update'),
+    path('prices/delete/<int:pk>', views.PriceDetailUpdateDestroyView.as_view(), name='price-delete'),
 
     # ------ INVOICE URLs ------#
     path('invoices', views.InvoiceListCreateView.as_view(), name='invoice-list'),
