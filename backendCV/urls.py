@@ -48,6 +48,27 @@ urlpatterns = [
     path('observations/<int:pk>', views.ObservationsDetailUpdateDestroyView.as_view(), name='observations-detail'),
     path('observations/update/<int:pk>', views.ObservationsDetailUpdateDestroyView.as_view(), name='observations-update'),
     path('observations/delete/<int:pk>', views.ObservationsDetailUpdateDestroyView.as_view(), name='observations-delete'),
+    
+    # ------ PAYMENT CONDITIONS URLs ------#
+    path('payment-conditions', views.PaymentConditionsListCreateView.as_view(), name='payment-conditions-list'),
+    path('payment-conditions/create', views.PaymentConditionsListCreateView.as_view(), name='payment-conditions-create'),
+    path('payment-conditions/<int:pk>', views.PaymentConditionsDetailUpdateDestroyView.as_view(), name='payment-conditions-detail'),
+    path('payment-conditions/update/<int:pk>', views.PaymentConditionsDetailUpdateDestroyView.as_view(), name='payment-conditions-update'),
+    path('payment-conditions/delete/<int:pk>', views.PaymentConditionsDetailUpdateDestroyView.as_view(), name='payment-conditions-delete'),
+    
+    # ------ DETAIL SERVICE URLs ------#
+    path('details-service', views.DetailsServiceListCreateView.as_view(), name='details-service-list'),
+    path('details-service/create', views.DetailsServiceListCreateView.as_view(), name='details-service-create'),
+    path('details-service/<int:pk>', views.DetailsServiceDetailUpdateDestroyView.as_view(), name='details-service-detail'),
+    path('details-service/update/<int:pk>', views.DetailsServiceDetailUpdateDestroyView.as_view(), name='details-service-update'),
+    path('details-service/delete/<int:pk>', views.DetailsServiceDetailUpdateDestroyView.as_view(), name='details-service-delete'),
+    
+    # ------ CHARACTERISTICS URLs ------#
+    path('characteristics', views.CharacteristicsListCreateView.as_view(), name='characteristics-list'),
+    path('characteristics/create', views.CharacteristicsListCreateView.as_view(), name='characteristics-create'),
+    path('characteristics/<int:pk>', views.CharacteristicsDetailUpdateDestroyView.as_view(), name='characteristics-detail'),
+    path('characteristics/update/<int:pk>', views.CharacteristicsDetailUpdateDestroyView.as_view(), name='characteristics-update'),
+    path('characteristics/delete/<int:pk>', views.CharacteristicsDetailUpdateDestroyView.as_view(), name='characteristics-delete'),
 
     # ------ PRICE URLs ------#
     path('prices', views.PriceListCreateView.as_view(), name='price-list'),

@@ -1,12 +1,45 @@
 from django.shortcuts import render
 from rest_framework import generics, status
 from backendCV.models import Company, Proforma, Project, Observations, Price, ExpenseStatus, Expense, Client, Invoice, User, Department, Core, Position
-from backendCV.serializers import CompanySerializer, ProformaSerializer, ProjectSerializer, ObservationsSerializer, PriceSerializer, ExpenseStatusSerializer, ExpenseSerializer, ClientSerializer, InvoiceSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer, UserListSerializer, CoreListSerializer, PositionListSerializer, DepartmentListSerializer
+from backendCV.serializers import CompanySerializer, ProformaSerializer, ProjectSerializer, ObservationsSerializer, PriceSerializer, ExpenseStatusSerializer, ExpenseSerializer, ClientSerializer, InvoiceSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer, UserListSerializer, CoreListSerializer, PositionListSerializer, DepartmentListSerializer, CharacteristicsSerializer, DetailsServiceSerializer, PaymentConditionsSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.views import TokenRefreshView
+
+#Payment Conditions
+class PaymentConditionsListCreateView(generics.ListCreateAPIView):
+    queryset = Company.objects.all()
+    serializer_class = PaymentConditionsSerializer
+    permission_classes = [IsAuthenticated]
+    
+class PaymentConditionsDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Company.objects.all()
+    serializer_class = PaymentConditionsSerializer
+    permission_classes = [IsAuthenticated]
+
+#Details Service
+class DetailsServiceListCreateView(generics.ListCreateAPIView):
+    queryset = Company.objects.all()
+    serializer_class = DetailsServiceSerializer
+    permission_classes = [IsAuthenticated]
+    
+class DetailsServiceDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Company.objects.all()
+    serializer_class = DetailsServiceSerializer
+    permission_classes = [IsAuthenticated]
+
+#Characteristics
+class CharacteristicsListCreateView(generics.ListCreateAPIView):
+    queryset = Company.objects.all()
+    serializer_class = CharacteristicsSerializer
+    permission_classes = [IsAuthenticated]
+    
+class CharacteristicsDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Company.objects.all()
+    serializer_class = CharacteristicsSerializer
+    permission_classes = [IsAuthenticated]
 
 #Company
 class CompanyListCreateView(generics.ListCreateAPIView):
