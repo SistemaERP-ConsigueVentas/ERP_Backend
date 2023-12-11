@@ -52,7 +52,6 @@ class CompanyDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CompanySerializer
     permission_classes = [IsAuthenticated]
 
-
 #Proforma
 class ProformaListCreateView(generics.ListCreateAPIView):
     queryset = Proforma.objects.all()

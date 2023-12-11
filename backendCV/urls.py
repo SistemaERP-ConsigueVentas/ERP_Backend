@@ -97,5 +97,4 @@ urlpatterns = [
     path('expenses/update/<int:pk>', views.ExpenseDetailUpdateDestroyView.as_view(), name='expense-update'),
     path('expenses/delete/<int:pk>', views.ExpenseDetailUpdateDestroyView.as_view(), name='expense-delete'),
     path('expenses/<int:pk>/update-status/<int:new_status_id>', views.ExpenseDetailUpdateDestroyView.as_view(), name='expense-update-status'),
-
 ]
