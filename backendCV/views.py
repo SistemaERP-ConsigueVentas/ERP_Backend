@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import generics, status
-from backendCV.models import Company, Proforma, Project, Observations, Price, ExpenseStatus, Expense, Client, Invoice, User, Department, Core, Position
-from backendCV.serializers import CompanySerializer, ProformaSerializer, ProjectSerializer, ObservationsSerializer, PriceSerializer, ExpenseStatusSerializer, ExpenseSerializer, ClientSerializer, InvoiceSerializer, UserRegistrationSerializer, UserLoginSerializer, ChangePasswordSerializer, UserListSerializer, CoreListSerializer, PositionListSerializer, DepartmentListSerializer, CharacteristicsSerializer, DetailsServiceSerializer, PaymentConditionsSerializer
+from backendCV.models import *
+from backendCV.serializers import *     
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
@@ -54,9 +54,21 @@ class CompanyDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
 #Proforma
 class ProformaListCreateView(generics.ListCreateAPIView):
-    queryset = Proforma.objects.all()
     serializer_class = ProformaSerializer
     permission_classes = [IsAuthenticated]
+    
+    def get_queryset(self):
+        # Obtener el name de Company
+        company_name = self.request.query_params.get('companyname', None)
+
+        # Filtra las Proformas por nombre de la Company si el parámetro está presente
+        if company_name:
+            queryset = Proforma.objects.filter(company_id__business_name__icontains=company_name)
+        else:
+            queryset = Proforma.objects.all()
+
+        return queryset
+    
     
 class ProformaDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Proforma.objects.all()
