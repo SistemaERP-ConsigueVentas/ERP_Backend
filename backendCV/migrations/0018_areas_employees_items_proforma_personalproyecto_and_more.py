@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=255)),
                 ('surname', models.CharField(max_length=255)),
                 ('dni', models.CharField(max_length=12)),
-                ('position_id', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backendCV.position')),
+                ('id_position', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='backendCV.position')),
             ],
         ),
         migrations.CreateModel(

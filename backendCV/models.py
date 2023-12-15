@@ -76,7 +76,7 @@ class Employees(models.Model):
     cellphone = models.CharField
     
     # Clave foránea que establece una relación con el modelo Position
-    position_id = models.ForeignKey(Position, on_delete=models.CASCADE)
+    id_position = models.ForeignKey(Position, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

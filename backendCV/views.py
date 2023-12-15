@@ -88,20 +88,15 @@ class ProformaListCreateView(generics.ListCreateAPIView):
         packages_data = proforma_data.pop('package', [])
         personal_proyecto_data = proforma_data.pop('personal_proyecto', [])
 
-
         proforma_serializer = ProformaSerializer(data=proforma_data)
         proforma_serializer.is_valid(raise_exception=True)
         proforma_instance = proforma_serializer.save()
-
-        print(f"Valor de proforma_instance: {proforma_instance.proforma_id}")
 
         observations_data = [{'proforma_id': proforma_instance.proforma_id, **obs_data} for obs_data in observations_data]
 
         observations_serializer = ObservationsSerializer(data=observations_data, many=True)
         observations_serializer.is_valid(raise_exception=True)
         observations_serializer.save()
-
-        print("agregó la obs")
 
         for package_data in packages_data:
             package_data['proforma_id'] = proforma_instance.proforma_id
@@ -128,8 +123,54 @@ class ProformaListCreateView(generics.ListCreateAPIView):
 class ProformaDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Proforma.objects.all()
     serializer_class = ProformaSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]   
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        data = serializer.data
+        
+        # Add Observations
+        observations = Observations.objects.filter(proforma_id=instance)
+        packages = Packages.objects.filter(proforma_id=instance)
+        personal_proyecto = PersonalProyecto.objects.filter(proforma_id=instance)
+        areas = Areas.objects.all()
+        
+        # Serializers
+        observations_data = ObservationsSerializer(observations, many=True).data
+        packages_data = PackagesSerializer(packages, many=True).data
+        personal_proyecto_data = PersonalProyectoSerializer(personal_proyecto, many=True).data
+        areas_data = AreasSerializer(areas, many=True).data
 
+        # RPT
+        data['observations'] = observations_data
+        data['packages'] = packages_data
+        data['personal_proyecto'] = personal_proyecto_data
+        data['areas'] = areas_data
+
+        # Add position
+        for employee_data in data['personal_proyecto']:
+            employee_id = employee_data['employees_id']
+            employee_instance = Employees.objects.get(pk=employee_id)
+            position_data = PositionListSerializer(employee_instance.id_position).data
+            employee_data['position'] = position_data
+        # Add Areas
+        for area_data in data['areas']:
+            area_id = area_data['area_id']
+            items = Items.objects.filter(area_id=area_id)
+            items_data = ItemsSerializer(items, many=True).data
+
+            # Add items y package_items
+            for item_data in items_data:
+                item_id = item_data['item_id']
+                package_items = PackageItems.objects.filter(item_id=item_id)
+                package_items_data = PackageItemsSerializer(package_items, many=True).data
+                item_data['package_items'] = package_items_data
+
+            area_data['items'] = items_data
+
+        return Response(data)
+    
 #PersonalProyecto
 class PersonalProyectoListCreateView(generics.ListCreateAPIView):
     queryset = PersonalProyecto.objects.all()

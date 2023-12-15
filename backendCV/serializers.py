@@ -26,6 +26,12 @@ class AreasSerializer(serializers.ModelSerializer):
         model = Areas
         fields = '__all__'
 
+# Serializer para el modelo Observations
+class ObservationsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Observations
+        fields = '__all__'
+        
 # Serializer para el modelo Proforma
 class ProformaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,12 +48,6 @@ class PackagesSerializer(serializers.ModelSerializer):
 class EmployeesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employees
-        fields = '__all__'
-
-# Serializer para el modelo Observations
-class ObservationsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Observations
         fields = '__all__'
 
 # Serializer para el modelo PersonalProyecto
