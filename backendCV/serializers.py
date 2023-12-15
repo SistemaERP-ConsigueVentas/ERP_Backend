@@ -1,10 +1,16 @@
 from rest_framework import serializers
-from backendCV.models import Characteristics, Company, Proforma, DetailsService, Project, Observations, ExpenseStatus, PaymentConditions, Price, Expense, Client, Invoice, User, Department, Core, Position 
+from backendCV.models import * 
 
-# Serializer para el modelo Characteristics
-class CharacteristicsSerializer(serializers.ModelSerializer):
+# Serializer para el modelo Items
+class ItemsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Characteristics
+        model = Items
+        fields = '__all__'
+
+# Serializer para el modelo PackageItems
+class PackageItemsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PackageItems
         fields = '__all__'
 
 # Serializer para el modelo Company
@@ -13,22 +19,29 @@ class CompanySerializer(serializers.ModelSerializer):
         model = Company
         fields = '__all__'
 
+
+# Serializer para el modelo Areas
+class AreasSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Areas
+        fields = '__all__'
+
 # Serializer para el modelo Proforma
 class ProformaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Proforma
         fields = '__all__'
 
-# Serializer para el modelo DetailsService
-class DetailsServiceSerializer(serializers.ModelSerializer):
+# Serializer para el modelo Packages
+class PackagesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = DetailsService
+        model = Packages
         fields = '__all__'
 
-# Serializer para el modelo Project
-class ProjectSerializer(serializers.ModelSerializer):
+# Serializer para el modelo Employees
+class EmployeesSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Project
+        model = Employees
         fields = '__all__'
 
 # Serializer para el modelo Observations
@@ -37,16 +50,10 @@ class ObservationsSerializer(serializers.ModelSerializer):
         model = Observations
         fields = '__all__'
 
-# Serializer para el modelo Price
-class PriceSerializer(serializers.ModelSerializer):
+# Serializer para el modelo PersonalProyecto
+class PersonalProyectoSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Price
-        fields = '__all__'
-
-# Serializer para el modelo PaymentConditions
-class PaymentConditionsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PaymentConditions
+        model = PersonalProyecto
         fields = '__all__'
 
 # Serializer para el modelo Expenses_Status

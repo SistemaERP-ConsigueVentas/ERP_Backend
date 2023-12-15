@@ -1,5 +1,5 @@
 from django.contrib import admin
-from backendCV.models import PaymentConditions, Price, Observations, Project, DetailsService, Characteristics, Proforma, Company, User, Core, Department, Position, Client, Invoice, Sale, ExpenseStatus, Expense
+from backendCV.models import *
 
 # Register your models here.
 admin.site.register(User)
@@ -12,10 +12,11 @@ admin.site.register(Sale)
 admin.site.register(ExpenseStatus)
 admin.site.register(Expense)
 admin.site.register(Company)
-admin.site.register(Characteristics)
+admin.site.register(Areas)
 admin.site.register(Proforma)
-admin.site.register(PaymentConditions)
-admin.site.register(Price)
+admin.site.register(Items)
+admin.site.register(PackageItems)
 admin.site.register(Observations)
-admin.site.register(Project)
-admin.site.register(DetailsService)
+admin.site.register(Packages)
+admin.site.register(PersonalProyecto)
+admin.site.register(Employees)

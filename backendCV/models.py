@@ -2,7 +2,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
-
 #Modelo Company
 class Company(models.Model):
     company_id = models.AutoField(primary_key=True)
@@ -26,95 +25,127 @@ class Proforma(models.Model):
     prepared_by = models.CharField(max_length=255)
     approved_by = models.CharField(max_length=255)
     email = models.EmailField(unique=True)
-    celphone_number = models.CharField(max_length=20)
-    
+    phone_number = models.CharField(max_length=20)
+    work_time = models.CharField(max_length=255)
+    type = models.CharField(max_length=255)
+    requered_by = models.CharField(max_length=255)
+
      # Clave foránea que establece una relación con el modelo Company 
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.invoice_number
 
-#Modelo PaymentConditions 
-class PaymentConditions(models.Model):
-    condition_id = models.AutoField(primary_key=True)
-    description = models.TextField()
-    deposits = models.CharField(max_length=255)
-    payable_to = models.CharField(max_length=255)
-    account = models.CharField(max_length=255)
-    cci = models.CharField(max_length=255)
+#Modelo Department
+class Department(models.Model):
+    id_department = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=40)
     
-    # Clave foránea que establece una relación con el modelo Proforma
-    proforma_id = models.ForeignKey(Proforma, on_delete=models.CASCADE)
-
     def __str__(self):
-        return str(self.condition_id)
+        return self.name
 
-#Modelo Price 
-class Price(models.Model):
-    price_id = models.AutoField(primary_key=True)
-    investment = models.TextField()
-    package = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    note = models.TextField()
-
-    # Clave foránea que establece una relación con el modelo Proforma
-    proforma_id = models.ForeignKey(Proforma, on_delete=models.CASCADE)
-
-    def __str__(self):    
-        return str(self.price_id)
+#Modelo Core
+class Core(models.Model):
+    id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=40)
     
-#Modelo Project 
-class Project(models.Model):
-    project_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-    personnel = models.CharField(max_length=255)
-    work_time = models.CharField(max_length=255)
+    # Clave foránea que establece una relación con el modelo Department
+    department_id = models.ForeignKey(Department, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.name
 
-    # Clave foránea que establece una relación con el modelo Proforma
-    proforma_id = models.ForeignKey(Proforma, on_delete=models.CASCADE)
+#Modelo Position
+class Position(models.Model):
+    id_position = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=60)
+    
+    # Clave foránea que establece una relación con el modelo Department y Core
+    department_id = models.ForeignKey(Department, on_delete=models.CASCADE)
+    cores_id = models.ForeignKey(Core, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.name
+
+#Modelo Employees 
+class Employees(models.Model):
+    employee_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    surname = models.CharField(max_length=255)
+    dni = models.CharField(max_length=12)
+    cellphone = models.CharField
+    
+    # Clave foránea que establece una relación con el modelo Position
+    position_id = models.ForeignKey(Position, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
+
+#Modelo Proforma_Employees 
+class PersonalProyecto(models.Model):
+    # Clave foránea que establece una relación con el modelo Proforma
+    proforma_id = models.ForeignKey(Proforma, on_delete=models.CASCADE)
+    
+    # Clave foránea que establece una relación con el modelo Employees
+    employees_id = models.ForeignKey(Employees, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return str(self.employees_id)    
 
 #Modelo class Observations
 class Observations(models.Model):
     observation_id = models.AutoField(primary_key=True)
     description = models.TextField()
     
-    # Clave foránea que establece una relación con el modelo Project
-    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
+    # Clave foránea que establece una relación con el modelo Proforma
+    proforma_id = models.ForeignKey(Proforma, on_delete=models.CASCADE)
 
     def __str__(self):
         return str(self.observation_id)
     
-    
-#Modelo Details_Service 
-class DetailsService(models.Model):
-    details_service_id = models.AutoField(primary_key=True)
-    name  = models.CharField(max_length=50)
-    item  = models.IntegerField()
-    detail  = models.CharField(max_length=255)
-    description  = models.TextField()
-    
-    def __str__(self):
-        return self.name
-        
-    
-#Modelo Characteristics
-class Characteristics (models.Model):
-    characteristics_id = models.AutoField(primary_key=True)
-    package_1 = models.CharField(max_length=255)
-    package_2 = models.CharField(max_length=255)
-    package_3 = models.CharField(max_length=255)
-
+#Modelo Packages
+class Packages (models.Model):
+    package_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    note_price = models.CharField(max_length=255)
     # Clave foránea que establece una relación con el modelo Proforma
     proforma_id = models.ForeignKey(Proforma, on_delete=models.CASCADE)
     
-    # Clave foránea que establece una relación con el modelo DetailsService
-    details_service_id = models.ForeignKey(DetailsService, on_delete=models.CASCADE)
+    def __str__(self):
+        return self.name
+    
+#Modelo Areas 
+class Areas(models.Model):
+    area_id = models.AutoField(primary_key=True)
+    name  = models.CharField(max_length=50)
     
     def __str__(self):
-        return str(self.characteristics_id)
+        return self.name       
+    
+#Modelo Items 
+class Items(models.Model):
+    item_id = models.AutoField(primary_key=True)
+    detail  = models.CharField(max_length=50)
+    description  = models.TextField()
+
+    # Clave foránea que establece una relación con el modelo Area
+    area_id = models.ForeignKey(Areas, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+#Modelo Package_Items 
+class PackageItems(models.Model):
+    value = models.CharField(max_length=255)
+    # Clave foránea que establece una relación con el modelo Packages
+    package_id = models.ForeignKey(Packages, on_delete=models.CASCADE)
+    
+    # Clave foránea que establece una relación con el modelo Items
+    item_id = models.ForeignKey(Items, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.value
 
 #Modelo Expenses_Status
 class ExpenseStatus(models.Model):
@@ -178,37 +209,6 @@ class Sale(models.Model):
 
     def __str__(self):
         return self.product
-
-#Modelo Department
-class Department(models.Model):
-    id_department = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=40)
-    
-    def __str__(self):
-        return self.name
-
-#Modelo Core
-class Core(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=40)
-    
-    # Clave foránea que establece una relación con el modelo Department
-    department_id = models.ForeignKey(Department, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.name
-
-#Modelo Position
-class Position(models.Model):
-    id_position = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=60)
-    
-    # Clave foránea que establece una relación con el modelo Department y Core
-    department_id = models.ForeignKey(Department, on_delete=models.CASCADE)
-    cores_id = models.ForeignKey(Core, on_delete=models.CASCADE)
-    
-    def __str__(self):
-        return self.name
     
 #Gestor de usuarios personalizado
 class UserManager(BaseUserManager):

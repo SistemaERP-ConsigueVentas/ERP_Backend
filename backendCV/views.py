@@ -7,38 +7,50 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.views import TokenRefreshView
+from django.db import transaction
 
-#Payment Conditions
-class PaymentConditionsListCreateView(generics.ListCreateAPIView):
-    queryset = Company.objects.all()
-    serializer_class = PaymentConditionsSerializer
+#PackageItems
+class PackageItemsListCreateView(generics.ListCreateAPIView):
+    queryset = PackageItems.objects.all()
+    serializer_class = PackageItemsSerializer
     permission_classes = [IsAuthenticated]
     
-class PaymentConditionsDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Company.objects.all()
-    serializer_class = PaymentConditionsSerializer
+class PackageItemsDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PackageItems.objects.all()
+    serializer_class = PackageItemsSerializer
     permission_classes = [IsAuthenticated]
 
-#Details Service
-class DetailsServiceListCreateView(generics.ListCreateAPIView):
-    queryset = Company.objects.all()
-    serializer_class = DetailsServiceSerializer
+#Package
+class PackagesListCreateView(generics.ListCreateAPIView):
+    queryset = Packages.objects.all()
+    serializer_class = PackagesSerializer
     permission_classes = [IsAuthenticated]
     
-class DetailsServiceDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Company.objects.all()
-    serializer_class = DetailsServiceSerializer
+class PackagesDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Packages.objects.all()
+    serializer_class = ItemsSerializer
     permission_classes = [IsAuthenticated]
 
-#Characteristics
-class CharacteristicsListCreateView(generics.ListCreateAPIView):
-    queryset = Company.objects.all()
-    serializer_class = CharacteristicsSerializer
+#Items
+class ItemsListCreateView(generics.ListCreateAPIView):
+    queryset = Items.objects.all()
+    serializer_class = ItemsSerializer
     permission_classes = [IsAuthenticated]
     
-class CharacteristicsDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Company.objects.all()
-    serializer_class = CharacteristicsSerializer
+class ItemsDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Items.objects.all()
+    serializer_class = ItemsSerializer
+    permission_classes = [IsAuthenticated]
+
+#Areas
+class AreasListCreateView(generics.ListCreateAPIView):
+    queryset = Areas.objects.all()
+    serializer_class = AreasSerializer
+    permission_classes = [IsAuthenticated]
+    
+class AreasDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Areas.objects.all()
+    serializer_class = AreasSerializer
     permission_classes = [IsAuthenticated]
 
 #Company
@@ -69,21 +81,64 @@ class ProformaListCreateView(generics.ListCreateAPIView):
 
         return queryset
     
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        proforma_data = request.data.get('proforma', {})
+        observations_data = proforma_data.pop('observations', [])
+        packages_data = proforma_data.pop('package', [])
+        personal_proyecto_data = proforma_data.pop('personal_proyecto', [])
+
+
+        proforma_serializer = ProformaSerializer(data=proforma_data)
+        proforma_serializer.is_valid(raise_exception=True)
+        proforma_instance = proforma_serializer.save()
+
+        print(f"Valor de proforma_instance: {proforma_instance.proforma_id}")
+
+        observations_data = [{'proforma_id': proforma_instance.proforma_id, **obs_data} for obs_data in observations_data]
+
+        observations_serializer = ObservationsSerializer(data=observations_data, many=True)
+        observations_serializer.is_valid(raise_exception=True)
+        observations_serializer.save()
+
+        print("agregó la obs")
+
+        for package_data in packages_data:
+            package_data['proforma_id'] = proforma_instance.proforma_id
+            package_serializer = PackagesSerializer(data=package_data)
+            package_serializer.is_valid(raise_exception=True)
+            package_instance = package_serializer.save()
+            
+            package_items_data = package_data.pop('package_items', [])
+
+            package_items_data = [{'package_id': package_instance.package_id, **pks_items_data} for pks_items_data in package_items_data]
+                        
+            package_items_serializer = PackageItemsSerializer(data=package_items_data, many=True)
+            package_items_serializer.is_valid(raise_exception=True)
+            package_items_serializer.save()
+        
+        personal_proyecto_data = [{'proforma_id': proforma_instance.proforma_id, **prsnal_proyect_data} for prsnal_proyect_data in personal_proyecto_data]
+
+        personal_proyecto_serializer = PersonalProyectoSerializer(data=personal_proyecto_data, many=True)
+        personal_proyecto_serializer.is_valid(raise_exception=True)
+        personal_proyecto_serializer.save()
+
+        return Response(proforma_serializer.data, status=status.HTTP_201_CREATED)
     
 class ProformaDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Proforma.objects.all()
     serializer_class = ProformaSerializer
     permission_classes = [IsAuthenticated]
 
-#Project
-class ProjectListCreateView(generics.ListCreateAPIView):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
+#PersonalProyecto
+class PersonalProyectoListCreateView(generics.ListCreateAPIView):
+    queryset = PersonalProyecto.objects.all()
+    serializer_class = PersonalProyectoSerializer
     permission_classes = [IsAuthenticated]
     
-class ProjectDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Project.objects.all()
-    serializer_class = ProjectSerializer
+class PersonalProyectoDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = PersonalProyecto.objects.all()
+    serializer_class = PersonalProyectoSerializer
     permission_classes = [IsAuthenticated]
 
 #Observations
@@ -97,15 +152,15 @@ class ObservationsDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView)
     serializer_class = ObservationsSerializer
     permission_classes = [IsAuthenticated]
 
-#Price
-class PriceListCreateView(generics.ListCreateAPIView):
-    queryset = Price.objects.all()
-    serializer_class = PriceSerializer
+#Employees
+class EmployeesListCreateView(generics.ListCreateAPIView):
+    queryset = Employees.objects.all()
+    serializer_class = EmployeesSerializer
     permission_classes = [IsAuthenticated]
     
-class PriceDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Price.objects.all()
-    serializer_class = PriceSerializer
+class EmployeesDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Employees.objects.all()
+    serializer_class = EmployeesSerializer
     permission_classes = [IsAuthenticated]
 
 #Expense
