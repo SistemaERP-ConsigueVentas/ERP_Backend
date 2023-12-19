@@ -34,6 +34,7 @@ class ObservationsSerializer(serializers.ModelSerializer):
         
 # Serializer para el modelo Proforma
 class ProformaSerializer(serializers.ModelSerializer):
+    company = CompanySerializer(source='company_id', read_only=True)
     class Meta:
         model = Proforma
         fields = '__all__'
