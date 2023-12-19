@@ -129,13 +129,13 @@ class ProformaDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         data = serializer.data
-        
+
         # Add Observations
         observations = Observations.objects.filter(proforma_id=instance)
         packages = Packages.objects.filter(proforma_id=instance)
         personal_proyecto = PersonalProyecto.objects.filter(proforma_id=instance)
         areas = Areas.objects.all()
-        
+
         # Serializers
         observations_data = ObservationsSerializer(observations, many=True).data
         packages_data = PackagesSerializer(packages, many=True).data
@@ -154,22 +154,31 @@ class ProformaDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             employee_instance = Employees.objects.get(pk=employee_id)
             position_data = PositionListSerializer(employee_instance.id_position).data
             employee_data['position'] = position_data
+
         # Add Areas
         for area_data in data['areas']:
             area_id = area_data['area_id']
             items = Items.objects.filter(area_id=area_id)
             items_data = ItemsSerializer(items, many=True).data
 
-            # Add items y package_items
+            # Add package_items directly within items
             for item_data in items_data:
                 item_id = item_data['item_id']
                 package_items = PackageItems.objects.filter(item_id=item_id)
                 package_items_data = PackageItemsSerializer(package_items, many=True).data
-                item_data['package_items'] = package_items_data
+
+                # Add each package_item directly within the item_data
+                for package_item_data in package_items_data:
+                    package_number = package_item_data['package_id']
+                    item_data[f'package_{package_number}'] = package_item_data
+
+                # Remove the 'package_items' key
+                item_data.pop('package_items', None)
 
             area_data['items'] = items_data
 
         return Response(data)
+
     
 #PersonalProyecto
 class PersonalProyectoListCreateView(generics.ListCreateAPIView):
