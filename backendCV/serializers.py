@@ -44,8 +44,16 @@ class PackagesSerializer(serializers.ModelSerializer):
         model = Packages
         fields = '__all__'
 
+
+# Serializer para el modelo Position
+class PositionListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Position
+        fields = '__all__' # Incluye todos los campos del modelo Company
+
 # Serializer para el modelo Employees
 class EmployeesSerializer(serializers.ModelSerializer):
+    position = PositionListSerializer(source='id_position', read_only=True)
     class Meta:
         model = Employees
         fields = '__all__'
@@ -91,11 +99,6 @@ class CoreListSerializer(serializers.ModelSerializer):
         model = Core
         fields = '__all__' # Incluye todos los campos del modelo Core
 
-# Serializer para el modelo Position
-class PositionListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Position
-        fields = '__all__' # Incluye todos los campos del modelo Company
     
 # Serializer para el modelo User (para registro)
 class UserRegistrationSerializer(serializers.ModelSerializer):
