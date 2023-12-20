@@ -8,6 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.db import transaction
+from datetime import timedelta
 
 #PackageItems
 class PackageItemsListCreateView(generics.ListCreateAPIView):
@@ -352,6 +353,10 @@ class UserLoginView(generics.CreateAPIView):
 
         if user:
             refresh = RefreshToken.for_user(user)
+            
+            access_token = refresh.access_token
+            access_token.set_exp(lifetime=timedelta(days=1))
+            
             # Obtener los datos del usuario
             user_data = {
                 'id': user.id,
@@ -363,7 +368,7 @@ class UserLoginView(generics.CreateAPIView):
 
             return Response({
                 'refresh': str(refresh),
-                'access': str(refresh.access_token),
+                'access': str(access_token),
                 'user': user_data,
             }, status=status.HTTP_200_OK)
         else:
