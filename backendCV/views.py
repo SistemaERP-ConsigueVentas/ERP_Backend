@@ -83,7 +83,7 @@ class ProformaListCreateView(generics.ListCreateAPIView):
     
     @transaction.atomic
     def create(self, request, *args, **kwargs):
-        proforma_data = request.data.get('proforma', {})
+        proforma_data = request.data
         observations_data = proforma_data.pop('observations', [])
         packages_data = proforma_data.pop('package', [])
         personal_proyecto_data = proforma_data.pop('personal_proyecto', [])
@@ -103,15 +103,15 @@ class ProformaListCreateView(generics.ListCreateAPIView):
             package_serializer = PackagesSerializer(data=package_data)
             package_serializer.is_valid(raise_exception=True)
             package_instance = package_serializer.save()
-            
+
             package_items_data = package_data.pop('package_items', [])
 
             package_items_data = [{'package_id': package_instance.package_id, **pks_items_data} for pks_items_data in package_items_data]
-                        
+
             package_items_serializer = PackageItemsSerializer(data=package_items_data, many=True)
             package_items_serializer.is_valid(raise_exception=True)
             package_items_serializer.save()
-        
+
         personal_proyecto_data = [{'proforma_id': proforma_instance.proforma_id, **prsnal_proyect_data} for prsnal_proyect_data in personal_proyecto_data]
 
         personal_proyecto_serializer = PersonalProyectoSerializer(data=personal_proyecto_data, many=True)
@@ -119,6 +119,7 @@ class ProformaListCreateView(generics.ListCreateAPIView):
         personal_proyecto_serializer.save()
 
         return Response(proforma_serializer.data, status=status.HTTP_201_CREATED)
+
     
 class ProformaDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Proforma.objects.all()
@@ -161,18 +162,16 @@ class ProformaDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             items = Items.objects.filter(area_id=area_id)
             items_data = ItemsSerializer(items, many=True).data
 
-            # Add package_items directly within items
+            # Add package_items
             for item_data in items_data:
                 item_id = item_data['item_id']
                 package_items = PackageItems.objects.filter(item_id=item_id)
                 package_items_data = PackageItemsSerializer(package_items, many=True).data
 
-                # Add each package_item directly within the item_data
                 for package_item_data in package_items_data:
                     package_number = package_item_data['package_id']
                     item_data[f'package_{package_number}'] = package_item_data
 
-                # Remove the 'package_items' key
                 item_data.pop('package_items', None)
 
             area_data['items'] = items_data

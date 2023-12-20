@@ -34,6 +34,7 @@ class ObservationsSerializer(serializers.ModelSerializer):
         
 # Serializer para el modelo Proforma
 class ProformaSerializer(serializers.ModelSerializer):
+    date = serializers.DateField(format="%d/%m/%Y", input_formats=["%d/%m/%Y"])
     company = CompanySerializer(source='company_id', read_only=True)
     class Meta:
         model = Proforma
