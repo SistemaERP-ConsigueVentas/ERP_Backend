@@ -24,7 +24,7 @@ class Proforma(models.Model):
     reference = models.CharField(max_length=255)
     prepared_by = models.CharField(max_length=255)
     approved_by = models.CharField(max_length=255)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     phone_number = models.CharField(max_length=20)
     work_time = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
