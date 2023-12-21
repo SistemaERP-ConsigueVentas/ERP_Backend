@@ -166,13 +166,14 @@ class ProformaDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
             # Add package_items
             for item_data in items_data:
                 item_id = item_data['item_id']
-                package_items = PackageItems.objects.filter(item_id=item_id)
-                package_items_data = PackageItemsSerializer(package_items, many=True).data
+                package_number = 0
 
-                for package_item_data in package_items_data:
-                    package_number = package_item_data['package_id']
-                    item_data[f'package_{package_number}'] = package_item_data
-
+                for packages in packages_data:
+                    package_item = PackageItems.objects.filter(item_id=item_id, package_id=4)
+                    package_items_data = PackageItemsSerializer(package_item, many=True).data
+                    package_number = package_number + 1
+                    item_data[f'package_{package_number}'] = package_items_data
+                # Remove the line below if 'package_items' field is not present in item_data
                 item_data.pop('package_items', None)
 
             area_data['items'] = items_data
