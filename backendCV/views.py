@@ -88,6 +88,11 @@ class ProformaListCreateView(generics.ListCreateAPIView):
         observations_data = proforma_data.pop('observations', [])
         packages_data = proforma_data.pop('package', [])
         personal_proyecto_data = proforma_data.pop('personal_proyecto', [])
+        
+        last_proforma = Proforma.objects.order_by('-proforma_id').first()
+        last_number = 0 if not last_proforma else int(last_proforma.invoice_number[1:])
+        new_number = last_number + 1
+        proforma_data['invoice_number'] = f'P{new_number:04d}'
 
         proforma_serializer = ProformaSerializer(data=proforma_data)
         proforma_serializer.is_valid(raise_exception=True)
