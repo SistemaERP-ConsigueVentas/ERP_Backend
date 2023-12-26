@@ -28,7 +28,7 @@ class Proforma(models.Model):
     phone_number = models.CharField(max_length=20)
     work_time = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
-    requered_by = models.CharField(max_length=255)
+    required_by = models.CharField(max_length=255)
 
      # Clave foránea que establece una relación con el modelo Company 
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE)

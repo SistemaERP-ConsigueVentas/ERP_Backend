@@ -81,9 +81,21 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+    
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db_sistemaerp',
+        'USER': 'root',
+        'PASSWORD': 'root',
+        'HOST': '165.22.180.66',
+        'PORT': '5432',
+        'OPTIONS': {
+            'options': '-c search_path=public',
+        },
     }
 }
 
