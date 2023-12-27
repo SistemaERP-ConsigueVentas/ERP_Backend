@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import generics, status
 from backendCV.models import *
 from backendCV.serializers import *     
@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.views import TokenRefreshView
 from django.db import transaction
 from datetime import timedelta
+from rest_framework.pagination import PageNumberPagination
 
 #PackageItems
 class PackageItemsListCreateView(generics.ListCreateAPIView):
@@ -212,6 +213,11 @@ class EmployeesListCreateView(generics.ListCreateAPIView):
     queryset = Employees.objects.all()
     serializer_class = EmployeesSerializer
     permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+    
+    def get(self, request, *args, **kwargs):
+        self.pagination_class.page_size = request.query_params.get('page_size', 10) 
+        return self.list(request, *args, **kwargs)
     
 class EmployeesDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Employees.objects.all()
@@ -327,8 +333,9 @@ class InvoiceSearchByClientView(generics.ListAPIView):
 
     def get_queryset(self):
         client_id = self.kwargs['client_id']
-        # Relación a través de las claves foráneas en modelo Sale
-        return Invoice.objects.filter(sale__client_id=client_id)
+        client = get_object_or_404(Client, id_client=client_id)
+        # Relación con Client
+        return Invoice.objects.filter(client_id=client.id_client)
 
 # Vista para el registro de usuarios
 class UserRegistrationView(generics.CreateAPIView):

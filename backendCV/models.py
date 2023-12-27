@@ -193,22 +193,25 @@ class Invoice(models.Model):
     status = models.CharField(max_length=20)
     date_of_issue = models.DateField()
 
+    # Clave foránea que establece una relación con el modelo Clients
+    client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
+    
     def __str__(self):
         return str(self.number)
 
 #Modelo Sales
-class Sale(models.Model):
-    id_sale = models.AutoField(primary_key=True)
-    date = models.DateField()
-    product = models.CharField(max_length=255)
+# class Sale(models.Model):
+#     id_sale = models.AutoField(primary_key=True)
+#     date = models.DateField()
+#     product = models.CharField(max_length=255)
     
-    # Clave foránea que establece una relación con el modelo Clients
-    client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
-    # Clave foránea que establece una relación con el modelo Invoices
-    invoice_id = models.ForeignKey(Invoice, on_delete=models.CASCADE)
+#     # Clave foránea que establece una relación con el modelo Clients
+#     client_id = models.ForeignKey(Client, on_delete=models.CASCADE)
+#     # Clave foránea que establece una relación con el modelo Invoices
+#     invoice_id = models.ForeignKey(Invoice, on_delete=models.CASCADE)
 
-    def __str__(self):
-        return self.product
+#     def __str__(self):
+#         return self.product
     
 #Gestor de usuarios personalizado
 class UserManager(BaseUserManager):
