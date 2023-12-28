@@ -141,49 +141,55 @@ class ProformaDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         data = serializer.data
 
         # Add Observations
-        observations = Observations.objects.filter(proforma_id=instance)
-        packages = Packages.objects.filter(proforma_id=instance)
-        personal_proyecto = PersonalProyecto.objects.filter(proforma_id=instance)
-        areas = Areas.objects.all()
-
-        # Serializers
-        observations_data = ObservationsSerializer(observations, many=True).data
-        packages_data = PackagesSerializer(packages, many=True).data
-        personal_proyecto_data = PersonalProyectoSerializer(personal_proyecto, many=True).data
-        areas_data = AreasSerializer(areas, many=True).data
-
-        # RPT
+        observations_data = ObservationsSerializer(Observations.objects.filter(proforma_id=instance), many=True).data
         data['observations'] = observations_data
-        data['packages'] = packages_data
-        data['personal_proyecto'] = personal_proyecto_data
-        data['areas'] = areas_data
 
-        # Add position
+        # Add Packages
+        packages_data = PackagesSerializer(Packages.objects.filter(proforma_id=instance), many=True).data
+        data['packages'] = packages_data
+
+        # Add PersonalProyecto
+        personal_proyecto_data = PersonalProyectoSerializer(PersonalProyecto.objects.filter(proforma_id=instance), many=True).data
+        data['personal_proyecto'] = personal_proyecto_data
+
+        employee_ids = [emp_data['employees_id'] for emp_data in personal_proyecto_data]
+        employees = Employees.objects.filter(pk__in=employee_ids).select_related('id_position')
+        position_data = {employee.employee_id: PositionListSerializer(employee.id_position).data for employee in employees}
+
         for employee_data in data['personal_proyecto']:
             employee_id = employee_data['employees_id']
-            employee_instance = Employees.objects.get(pk=employee_id)
-            position_data = PositionListSerializer(employee_instance.id_position).data
-            employee_data['position'] = position_data
+            employee_data['position'] = position_data.get(employee_id, {})
 
         # Add Areas
-        for area_data in data['areas']:
+        areas_data = AreasSerializer(Areas.objects.all(), many=True).data
+        data['areas'] = areas_data
+
+        # Items y PackageItems
+        items_qs = Items.objects.filter(area_id__in=[area['area_id'] for area in areas_data])
+        items_data = ItemsSerializer(items_qs, many=True).data
+
+        package_items_qs = PackageItems.objects.filter(item_id__in=[item['item_id'] for item in items_data], package_id__in=[package['package_id'] for package in packages_data])
+        package_items_data = PackageItemsSerializer(package_items_qs, many=True).data
+
+        package_items_by_item_id = {}
+        for package_item_data in package_items_data:
+            item_id = package_item_data['item_id']
+            if item_id not in package_items_by_item_id:
+                package_items_by_item_id[item_id] = []
+            package_items_by_item_id[item_id].append(package_item_data)
+
+        for item_data in items_data:
+            item_id = item_data['item_id']
+            item_data.update({f'package_{i + 1}': {} for i in range(len(packages_data))})
+            package_number = 1
+            for package_item_data in package_items_by_item_id.get(item_id, []):
+                item_data[f'package_{package_number}'] = package_item_data
+                package_number = package_number + 1
+
+        for area_data in areas_data:
             area_id = area_data['area_id']
-            items = Items.objects.filter(area_id=area_id)
-            items_data = ItemsSerializer(items, many=True).data
-
-            # Add package_items
-            for item_data in items_data:
-                item_id = item_data['item_id']
-                package_number = 0
-
-                for package in packages_data:
-                    package_item = PackageItems.objects.filter(item_id=item_id, package_id=package['package_id'])
-                    package_items_data = PackageItemsSerializer(package_item, many=True).data
-                    package_number = package_number + 1
-                    item_data[f'package_{package_number}'] = package_items_data[0] if len(package_items_data) == 1 else package_items_data
-                item_data.pop('package_items', None)
-
-            area_data['items'] = items_data
+            area_items = [item_data for item_data in items_data if item_data['area_id'] == area_id]
+            area_data['items'] = area_items
 
         return Response(data)
 

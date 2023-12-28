@@ -133,7 +133,7 @@ class Items(models.Model):
     area_id = models.ForeignKey(Areas, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.name
+        return self.detail
 
 #Modelo Package_Items 
 class PackageItems(models.Model):
