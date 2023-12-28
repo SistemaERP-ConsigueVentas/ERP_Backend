@@ -99,11 +99,12 @@ class ProformaListCreateView(generics.ListCreateAPIView):
         proforma_serializer.is_valid(raise_exception=True)
         proforma_instance = proforma_serializer.save()
 
-        observations_data = [{'proforma_id': proforma_instance.proforma_id, **obs_data} for obs_data in observations_data]
+        observations_data_objs = [Observations(proforma_id=proforma_instance, **obs_data) for obs_data in observations_data]
+        Observations.objects.bulk_create(observations_data_objs)
+        
+        package_items_objs = []
 
-        observations_serializer = ObservationsSerializer(data=observations_data, many=True)
-        observations_serializer.is_valid(raise_exception=True)
-        observations_serializer.save()
+        items_dict = {item.item_id: item for item in Items.objects.all()}
 
         for package_data in packages_data:
             package_data['proforma_id'] = proforma_instance.proforma_id
@@ -112,12 +113,13 @@ class ProformaListCreateView(generics.ListCreateAPIView):
             package_instance = package_serializer.save()
 
             package_items_data = package_data.pop('package_items', [])
-
-            package_items_data = [{'package_id': package_instance.package_id, **pks_items_data} for pks_items_data in package_items_data]
-
-            package_items_serializer = PackageItemsSerializer(data=package_items_data, many=True)
-            package_items_serializer.is_valid(raise_exception=True)
-            package_items_serializer.save()
+            
+            for pks_items_data in package_items_data:
+                item = items_dict.get(pks_items_data['item_id'])
+                pks_items_data['item_id'] = item
+                package_items_objs.append(PackageItems(package_id=package_instance, **pks_items_data))
+        
+        PackageItems.objects.bulk_create(package_items_objs)
 
         personal_proyecto_data = [{'proforma_id': proforma_instance.proforma_id, **prsnal_proyect_data} for prsnal_proyect_data in personal_proyecto_data]
 
@@ -216,7 +218,7 @@ class EmployeesListCreateView(generics.ListCreateAPIView):
     pagination_class = PageNumberPagination
     
     def get(self, request, *args, **kwargs):
-        self.pagination_class.page_size = request.query_params.get('page_size', 10) 
+        self.pagination_class.page_size = request.query_params.get('page_size', 10)  
         return self.list(request, *args, **kwargs)
     
 class EmployeesDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
