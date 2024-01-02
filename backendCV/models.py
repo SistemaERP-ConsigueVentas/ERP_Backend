@@ -29,6 +29,7 @@ class Proforma(models.Model):
     work_time = models.CharField(max_length=255)
     type = models.CharField(max_length=255)
     required_by = models.CharField(max_length=255)
+    igv = models.BooleanField()
 
      # Clave foránea que establece una relación con el modelo Company 
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
