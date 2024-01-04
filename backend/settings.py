@@ -11,7 +11,11 @@ https://docs.djangoproject.com/en/dev/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+import dj_database_url
 
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -19,13 +23,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-i!-i%0ovs7!co#uk+0+a0v#*y26v$t_8*1a8&)#h#d&$2dtq_2'
-
+# Llave secreta
+SECRET_KEY = os.environ.get('SECRET_KEY', default='your secret key')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG') 
 
 ALLOWED_HOSTS = []
+# Configuración del nombre del host para producción
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
 
 # Application definition
 
@@ -86,17 +94,22 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
     
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_sistemaerp',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': '165.22.180.66',
-        'PORT': '5432',
-        'OPTIONS': {
-            'options': '-c search_path=public',
-        },
-    }
+    'default': dj_database_url.config(
+        # url de postgressql
+        default='postgresql://'+os.environ.get('DB_USER')+':'+os.environ.get('DB_PASSWORD')+'@'+os.environ.get('DB_HOST')+':'+os.environ.get('DB_PORT')+'/'+os.environ.get('DB_NAME'),
+        conn_max_age=600
+    )
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.postgresql',
+    #     'NAME': 'db_sistemaerp',
+    #     'USER': 'root',
+    #     'PASSWORD': 'root',
+    #     'HOST': '165.22.180.66',
+    #     'PORT': '5432',
+    #     'OPTIONS': {
+    #         'options': '-c search_path=public',
+    #     },
+    # }
 }
 
 
