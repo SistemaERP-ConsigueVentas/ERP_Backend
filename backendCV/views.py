@@ -222,10 +222,36 @@ class EmployeesListCreateView(generics.ListCreateAPIView):
     serializer_class = EmployeesSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
-    
+
     def get(self, request, *args, **kwargs):
-        self.pagination_class.page_size = request.query_params.get('page_size', 10)  
+        search_param = request.query_params.get('search', None)
+
+        if search_param:
+            return self.list_with_search(request, *args, **kwargs)
+        else:
+            return self.list_with_pagination(request, *args, **kwargs)
+
+    def list_with_pagination(self, request, *args, **kwargs):
+        self.pagination_class.page_size = request.query_params.get('page_size', 10)
         return self.list(request, *args, **kwargs)
+
+    def list_with_search(self, request, *args, **kwargs):
+        self.pagination_class = None
+        return self.list(request, *args, **kwargs)
+
+    def get_queryset(self):
+        queryset = Employees.objects.all()
+        search_param = self.request.query_params.get('search', None)
+
+        if search_param:
+            queryset = queryset.filter(
+                models.Q(name__icontains=search_param) |
+                models.Q(surname__icontains=search_param) |
+                models.Q(id_position__name__icontains=search_param)
+            )
+
+        return queryset
+    
     
 class EmployeesDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Employees.objects.all()
@@ -367,7 +393,7 @@ class UserLoginView(generics.CreateAPIView):
         
         username = serializer.validated_data.get('username')
         password = serializer.validated_data.get('password')
-
+        
         # Autenticar al usuario
         user = authenticate(request, username=username, password=password)
 
