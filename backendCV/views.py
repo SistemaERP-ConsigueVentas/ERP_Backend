@@ -142,7 +142,7 @@ class ProformaDetailUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
 
         # Add Observations
         observations_data = ObservationsSerializer(Observations.objects.filter(proforma_id=instance), many=True).data
-        data['observations'] = observations_data
+        data['observations']=observations_data
 
         # Add Packages
         packages_data = PackagesSerializer(Packages.objects.filter(proforma_id=instance), many=True).data
